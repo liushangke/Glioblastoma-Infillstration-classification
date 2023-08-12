@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from dataloader import PatientDataset
-from model.unet import UNet3D
+from model.unet import UNet3DPatchBased
 from sklearn.metrics import precision_score, recall_score, f1_score
 from torch.utils.tensorboard import SummaryWriter
 
@@ -17,7 +17,7 @@ out_channel = 3
 
 # Load your data and labels
 all_patient_data = np.load('processed_patient_data.npy', allow_pickle=True)
-label_dict = np.load('label_dict.npy', allow_pickle=True).item()
+label_dict = np.load('labels.npy', allow_pickle=True)
 
 # Create your dataset and data loader
 dataset = PatientDataset(all_patient_data, label_dict)
@@ -27,7 +27,7 @@ dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # Create the model, loss function, and optimizer
-model = UNet3D(in_channels=in_channel, out_channels=out_channel).to(device)
+model = UNet3DPatchBased(in_channels=in_channel, out_channels=out_channel).to(device)
 criterion = torch.nn.BCEWithLogitsLoss()
 optimizer = optim.Adam(model.parameters(), lr=lr)
 
