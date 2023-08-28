@@ -78,9 +78,9 @@ def display_dataset_info(dataset):
 
 
 def main():
-    all_patient_data = np.load('processed_patient_data.npy', allow_pickle=True)
+    all_patient_data = np.load('Glioblastoma_Infillstration_Classification/processed_patient_data.npy', allow_pickle=True)
     patches_per_sample = 10
-    labels_array = np.load('labels.npy', allow_pickle=True)
+    labels_array = np.load('Glioblastoma_Infillstration_Classification/labels.npy', allow_pickle=True)
     dataset = PatientDataset(all_patient_data, labels_array, patches_per_sample=patches_per_sample)
 
     display_dataset_info(dataset)
