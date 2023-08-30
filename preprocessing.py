@@ -14,16 +14,18 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 def data_investigation(all_patient_data, all_labels):
     # Create a dictionary to store the counts of each unique shape
     shape_counts = defaultdict(int)
-
+    patient_shapes = {}  # Dictionary to store shapes for each patient
+    
     # Iterate over all the patient data
-    for patient in all_patient_data:
-        # Iterate over each sequence type for the patient
-        for sequence_type, sequence_data in patient.items():
-            if sequence_type != 'patient_id':
-                # Count the shape of the sequence data
-                shape_counts[sequence_data.shape] += 1
+    for idx, patient in enumerate(all_patient_data):
+        # You can choose any sequence, since they all have the same shape
+        sequence_data = patient['T1-3D.nii']
+        
+        # Count the shape of the sequence data
+        shape_counts[sequence_data.shape] += 1
+        patient_shapes[patient['patient_id']] = sequence_data.shape
 
-    return shape_counts
+    return shape_counts, patient_shapes
 
 
 def plot_shape_counts(shape_counts, top_n=10):
@@ -220,23 +222,21 @@ def create_label_dict(label_excel_path):
 
 def main():
     # Specify the directories where your raw data and labels are stored
-    data_dir = "data/Brainstem Annotations"  # Replace with your path
+    data_dir = "/home/slt2870/Glioblastoma_Infillstration_Classification/data/Brainstem Annotations"  # Replace with your path
     # Replace with your path
-    label_dir = "data/Deidentified Brainstem_dicoms full set with hashed IDs.xlsx"
+    label_dir = "/home/slt2870/Glioblastoma_Infillstration_Classification/data/Deidentified Brainstem_dicoms full set with hashed IDs.xlsx"
 
     label_dict = create_label_dict(label_dir)
 
     all_patient_data, all_labels = process_all_patients(data_dir, label_dict)
 
-    # shape_counts = data_investigation(all_patient_data, all_labels)
-    # plot_shape_counts(shape_counts)
-    # plot_3d_shape_distribution(shape_counts)
-    # Choose a patient's data
-    # patient_data = all_patient_data[17]
-
-    # # Visualize the ROI for each sequence
-    # for sequence_type in ['T1-3D.nii', 'T1c-3D.nii', 'T2-3D.nii', 'FLAIR-3D.nii']:
-    #     visualize_3d_roi(patient_data[sequence_type], sequence_type)
+    shape_counts, patient_shapes = data_investigation(all_patient_data, all_labels)
+    plot_shape_counts(shape_counts)
+    
+    # Print out the shapes for each patient
+    print("\nShapes for each patient:")
+    for patient_id, shape in patient_shapes.items():
+        print(f"Patient {patient_id}: Shape {shape}")
 
     np.save('processed_patient_data.npy', all_patient_data)
     np.save('labels.npy', all_labels)

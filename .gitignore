@@ -1,3 +1,4 @@
 /data
 /labels.npy
 /processed_patient_data.npy
+/rsna-resnet10

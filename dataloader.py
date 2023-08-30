@@ -9,7 +9,7 @@ class PatientDataset(Dataset):
         self.data = all_patient_data
         # Replicate each label 'patches_per_sample' times to match the number of patches
         self.labels = [self.map_label(labels_array[patient_idx]) for patient_idx, _ in enumerate(all_patient_data) for _ in range(patches_per_sample)]
-        self.patch_size = (32, 32, 32)  # Desired patch size
+        self.patch_size = (16, 16, 16)  # Desired patch size
         self.patches_per_sample = patches_per_sample  # Number of patches to extract per sample
 
 
