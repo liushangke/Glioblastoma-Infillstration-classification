@@ -5,13 +5,13 @@ from scipy.ndimage import zoom as resize
 import nibabel as nib
 
 class PatientDataset(Dataset):
-    def __init__(self, all_patient_data, labels_array, patches_per_sample=10):
+    def __init__(self, all_patient_data, labels_array, patches_per_sample=10, resize_shape=(100, 100, 100)):
         self.data = all_patient_data
         # Replicate each label 'patches_per_sample' times to match the number of patches
         self.labels = [self.map_label(labels_array[patient_idx]) for patient_idx, _ in enumerate(all_patient_data) for _ in range(patches_per_sample)]
         self.patch_size = (16, 16, 16)  # Desired patch size
         self.patches_per_sample = patches_per_sample  # Number of patches to extract per sample
-
+        self.resize_shape = resize_shape
 
     def map_label(self, label):
         if label == "Extensive":
@@ -20,7 +20,16 @@ class PatientDataset(Dataset):
             return [0, 1, 0]
         else:
             return [0, 0, 1]
+        
 
+    def resize_sequence(self, sequence):
+        # Use scipy's zoom to resize the sequence based on the resize_shape attribute
+        factors = (self.resize_shape[0]/sequence.shape[0], 
+                   self.resize_shape[1]/sequence.shape[1], 
+                   self.resize_shape[2]/sequence.shape[2])
+        return resize(sequence, factors)
+
+                                 
     def __len__(self):
         return len(self.data) * self.patches_per_sample
 
@@ -36,6 +45,7 @@ class PatientDataset(Dataset):
         sequences = []
         for sequence_type in sequence_types:
             tensor = patient_data[sequence_type].astype(np.float32)
+            tensor = self.resize_sequence(tensor)
             
             # Randomly select a starting point for the patch
             start_x = np.random.randint(0, tensor.shape[0] - self.patch_size[0])
@@ -53,7 +63,7 @@ class PatientDataset(Dataset):
         tensor = torch.stack(sequences).squeeze(1)
         label = torch.tensor(self.labels[patient_idx], dtype=torch.float32)
 
-        return tensor, label
+        return tensor, label, patient_idx
 
 def display_dataset_info(dataset):
     # Total Length of the Dataset

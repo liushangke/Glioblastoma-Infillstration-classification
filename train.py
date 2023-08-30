@@ -1,106 +1,140 @@
-import torch
+import os
+import glob
+import nrrd
+import nibabel as nib
 import numpy as np
-import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader
+import re
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+from collections import defaultdict
+from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
+from scipy.ndimage import binary_opening
+from scipy.ndimage import zoom as resize
+
 from dataloader import PatientDataset
-from model.unet import UNet3DPatchBased
-from sklearn.metrics import precision_score, recall_score, f1_score
-from torch.utils.tensorboard import SummaryWriter
 
-# Define parameters
+import torch
+from torch.utils.data import Dataset, DataLoader
+import monai
+from monai.networks.nets import resnet10
+
+from sklearn.model_selection import StratifiedKFold
+from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score
+
+import torch.optim as optim
+import torch.nn as nn
+
+import os
+import datetime
+import logging
+
+
+data = np.load('/home/slt2870/Glioblastoma_Infillstration_Classification/processed_patient_data.npy', allow_pickle=True)
+labels = np.load('/home/slt2870/Glioblastoma_Infillstration_Classification/labels.npy', allow_pickle=True)
+
+
+# Parameters
+model_name = "resnet10"
+current_date = datetime.datetime.now().strftime('%Y%m%d')
 lr = 1e-4
-batch_size = 2
-num_epochs = 50
-in_channel = 4
-out_channel = 3
+n_input_channels = 4
+num_classes = 3
+num_epochs = 10
 
-# Load your data and labels
-all_patient_data = np.load('processed_patient_data.npy', allow_pickle=True)
-label_dict = np.load('labels.npy', allow_pickle=True)
+# Define log directory and filename
+log_dir = "/home/slt2870/Glioblastoma_Infillstration_Classification/logs"
+log_file = f"{model_name}_{current_date}_lr{lr}_epochs{num_epochs}.txt"
+log_path = os.path.join(log_dir, log_file)
 
-# Create your dataset and data loader
-dataset = PatientDataset(all_patient_data, label_dict)
-dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+save_model_dir = "/home/slt2870/Glioblastoma_Infillstration_Classification/model_weights"
+if not os.path.exists(save_model_dir):
+    os.makedirs(save_model_dir)
 
-# Determine the device to run the model on
+
+# Check and create log directory if it doesn't exist
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
+# Set up logging
+logging.basicConfig(filename=log_path, level=logging.INFO, 
+                    format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+logger = logging.getLogger()
+logger.addHandler(logging.StreamHandler())  # Also log to console
+
+# Set device
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-# Create the model, loss function, and optimizer
-model = UNet3DPatchBased(in_channels=in_channel, out_channels=out_channel).to(device)
-criterion = torch.nn.BCEWithLogitsLoss()
-optimizer = optim.Adam(model.parameters(), lr=lr)
+# Set up 4-fold stratified cross-validation
+kf = StratifiedKFold(n_splits=4, shuffle=True, random_state=42)
+for fold, (train_idx, test_idx) in enumerate(kf.split(data, labels)):
+    
+    train_data, train_labels = data[train_idx], labels[train_idx]
+    test_data, test_labels = data[test_idx], labels[test_idx]
+    
+    train_dataset = PatientDataset(train_data, train_labels, patches_per_sample=10)
+    test_dataset = PatientDataset(test_data, test_labels, patches_per_sample=10)
+    
+    train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=2, shuffle=False)
+    
+    # Initialize the ResNet model
+    model = resnet10(spatial_dims=3, n_input_channels=n_input_channels, num_classes=num_classes, pretrained=False)
+    model.to(device)  # Transfer model to GPU
 
-# Create a SummaryWriter object
-writer = SummaryWriter()
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters(), lr=1e-4)
+    
+    # Training loop
+    for epoch in range(num_epochs):
+        model.train()
+        epoch_loss = 0
+        for inputs, targets, patient_idxs in train_loader:  # Updated this line
+            inputs, targets = inputs.to(device), targets.to(device)
+            optimizer.zero_grad()
+            outputs = model(inputs)
+            loss = criterion(outputs, torch.argmax(targets, dim=1))
+            loss.backward()
+            optimizer.step()
+            epoch_loss += loss.item()
 
-# Train the model
-for epoch in range(num_epochs):
-    epoch_loss = 0
-    epoch_correct = 0
-    epoch_total = 0
-    epoch_misclassified = []
 
-    for i, (images, labels) in enumerate(dataloader):
-        images = images.to(device)
-        labels = labels.to(device)
+        print(f"Fold {fold + 1}, Epoch {epoch + 1}, Training Loss: {epoch_loss/len(train_loader):.4f}")
+        
+    # Test loop
+    model.eval()
+    total_correct = 0
+    total_samples = 0
+    all_preds = []
+    all_labels = []
+    misclassified_patient_ids = []
+    
+    with torch.no_grad():
+        for inputs, targets, patient_idxs in test_loader:  # Assume dataset returns patient_idxs
+            inputs, targets = inputs.to(device), targets.to(device)  # Transfer data to GPU
+            outputs = model(inputs)
+            _, predicted = outputs.max(1)
+            total_samples += targets.size(0)
+            total_correct += (predicted == torch.argmax(targets, dim=1)).sum().item()
+            all_preds.extend(predicted.cpu().numpy())
+            all_labels.extend(torch.argmax(targets, dim=1).cpu().numpy())
+            
+            # Track misclassified samples
+            for i, pred in enumerate(predicted):
+                if pred != torch.argmax(targets[i], dim=0):
+                    misclassified_patient_ids.append(patient_idxs[i].item())
+    
+    accuracy = total_correct / total_samples
+    precision = precision_score(all_labels, all_preds, average='macro')
+    recall = recall_score(all_labels, all_preds, average='macro')
+    f1 = f1_score(all_labels, all_preds, average='macro')
+    
+    print(f"Fold {fold + 1}, Test Accuracy: {accuracy:.2f}, Precision: {precision:.2f}, Recall: {recall:.2f}, F1 Score: {f1:.2f}")
+    print(f"Misclassified Patient IDs in Fold {fold + 1}: {misclassified_patient_ids}")
 
-        # Forward pass
-        outputs = model(images)
-        loss = criterion(outputs, labels)
-
-        # Backward and optimize
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-
-        # Track loss and correct predictions
-        epoch_loss += loss.item()
-        _, predicted = torch.max(outputs.data, 1)
-        _, labels_max = torch.max(labels.data, 1)
-        correct = (predicted == labels_max).sum().item()
-        epoch_correct += correct
-        epoch_total += labels.size(0)
-
-        # Track misclassified samples
-        misclassified_indices = (predicted != labels_max).nonzero(as_tuple=True)[0]
-        epoch_misclassified.extend(misclassified_indices.tolist())
-
-        # Track precision, recall, and F1-score
-        precision = precision_score(labels_max.cpu(), predicted.cpu(), average='macro')
-        recall = recall_score(labels_max.cpu(), predicted.cpu(), average='macro')
-        f1 = f1_score(labels_max.cpu(), predicted.cpu(), average='macro')
-
-    epoch_loss /= len(dataloader)
-    epoch_acc = epoch_correct / epoch_total
-    writer.add_scalar('Training/Loss', epoch_loss, epoch)
-    writer.add_scalar('Training/Accuracy', epoch_acc, epoch)
-    writer.add_scalar('Training/Precision', precision, epoch)
-    writer.add_scalar('Training/Recall', recall, epoch)
-    writer.add_scalar('Training/F1', f1, epoch)
-
-    # Add histograms for model's weights and gradients
-    for name, param in model.named_parameters():
-        writer.add_histogram('Weights/' + name, param.data, epoch)
-        if param.grad is not None:
-            writer.add_histogram('Gradients/' + name, param.grad, epoch)
-
-    # Add images for some misclassified samples if your data are images
-    if epoch_misclassified:
-        # Save the misclassified 3D images for visualization
-        wrong_images = [dataset[i][0] for i in epoch_misclassified[:10]]
-        # Save them to disk, or visualize directly here
-        for idx, img in enumerate(wrong_images):
-            # convert tensor to numpy array
-            img_np = img.cpu().numpy()
-            # take the slice in the middle of the 3D image
-            slice_idx = img_np.shape[-1] // 2
-            img_slice = img_np[..., slice_idx]
-            # normalize to [0, 1] for visualization
-            img_slice = (img_slice - img_slice.min()) / (img_slice.max() - img_slice.min())
-            # write the image slice to tensorboard
-            writer.add_image(f"Misclassified/Image_{idx}", img_slice, epoch, dataformats='HW')
-
-writer.close()
+    # Save model weights
+    model_save_path = os.path.join(save_model_dir, f"model_fold_{fold + 1}.pth")
+    torch.save(model.state_dict(), model_save_path)
 
 print('Finished Training')
