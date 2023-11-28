@@ -1,0 +1,115 @@
+27-Sep-23 10:02:56 - INFO - Fold 1 Training Data:
+27-Sep-23 10:02:56 - INFO - Class Extensive: 11 samples
+27-Sep-23 10:02:56 - INFO - Class Microscopic: 5 samples
+27-Sep-23 10:02:56 - INFO - Fold 1 Validation Data:
+27-Sep-23 10:02:56 - INFO - Class Extensive: 4 samples
+27-Sep-23 10:02:56 - INFO - Class Microscopic: 2 samples
+27-Sep-23 10:03:30 - INFO - Fold 1 Training Data:
+27-Sep-23 10:03:30 - INFO - Class Extensive: 11 samples
+27-Sep-23 10:03:30 - INFO - Class Microscopic: 5 samples
+27-Sep-23 10:03:30 - INFO - Fold 1 Validation Data:
+27-Sep-23 10:03:30 - INFO - Class Extensive: 4 samples
+27-Sep-23 10:03:30 - INFO - Class Microscopic: 2 samples
+27-Sep-23 10:05:13 - INFO - Fold 1, Epoch 1, Training Loss: 0.7808, Validation Loss: 0.6428
+27-Sep-23 10:05:13 - INFO - Training Accuracy: 43.75, Validation Accuracy: 66.67
+27-Sep-23 10:06:54 - INFO - Fold 1, Epoch 2, Training Loss: 0.7922, Validation Loss: 0.5091
+27-Sep-23 10:06:54 - INFO - Training Accuracy: 68.75, Validation Accuracy: 66.67
+27-Sep-23 10:08:35 - INFO - Fold 1, Epoch 3, Training Loss: 0.7227, Validation Loss: 0.6230
+27-Sep-23 10:08:35 - INFO - Training Accuracy: 68.75, Validation Accuracy: 66.67
+27-Sep-23 10:10:15 - INFO - Fold 1, Epoch 4, Training Loss: 0.5302, Validation Loss: 0.7206
+27-Sep-23 10:10:15 - INFO - Training Accuracy: 68.75, Validation Accuracy: 66.67
+27-Sep-23 10:11:56 - INFO - Fold 1, Epoch 5, Training Loss: 0.6339, Validation Loss: 0.4369
+27-Sep-23 10:11:56 - INFO - Training Accuracy: 68.75, Validation Accuracy: 83.33
+27-Sep-23 10:13:37 - INFO - Fold 1, Epoch 6, Training Loss: 0.6095, Validation Loss: 0.6259
+27-Sep-23 10:13:37 - INFO - Training Accuracy: 75.00, Validation Accuracy: 66.67
+27-Sep-23 10:15:19 - INFO - Fold 1, Epoch 7, Training Loss: 0.3474, Validation Loss: 0.6529
+27-Sep-23 10:15:19 - INFO - Training Accuracy: 93.75, Validation Accuracy: 66.67
+27-Sep-23 10:17:01 - INFO - Fold 1, Epoch 8, Training Loss: 0.5101, Validation Loss: 0.5997
+27-Sep-23 10:17:01 - INFO - Training Accuracy: 81.25, Validation Accuracy: 66.67
+27-Sep-23 10:18:43 - INFO - Fold 1, Epoch 9, Training Loss: 0.4947, Validation Loss: 0.6074
+27-Sep-23 10:18:43 - INFO - Training Accuracy: 87.50, Validation Accuracy: 83.33
+27-Sep-23 10:20:23 - INFO - Fold 1, Epoch 10, Training Loss: 0.6353, Validation Loss: 0.6847
+27-Sep-23 10:20:23 - INFO - Training Accuracy: 75.00, Validation Accuracy: 66.67
+27-Sep-23 10:20:23 - INFO - Misclassified Patient IDs for Fold 1: [3, 21]
+27-Sep-23 10:20:24 - INFO - Fold 2 Training Data:
+27-Sep-23 10:20:24 - INFO - Class Extensive: 11 samples
+27-Sep-23 10:20:24 - INFO - Class Microscopic: 5 samples
+27-Sep-23 10:20:24 - INFO - Fold 2 Validation Data:
+27-Sep-23 10:20:24 - INFO - Class Extensive: 4 samples
+27-Sep-23 10:20:24 - INFO - Class Microscopic: 2 samples
+27-Sep-23 10:22:09 - INFO - Fold 2, Epoch 1, Training Loss: 0.5690, Validation Loss: 11.1054
+27-Sep-23 10:22:09 - INFO - Training Accuracy: 75.00, Validation Accuracy: 66.67
+27-Sep-23 10:23:54 - INFO - Fold 2, Epoch 2, Training Loss: 0.7417, Validation Loss: 2.6516
+27-Sep-23 10:23:54 - INFO - Training Accuracy: 75.00, Validation Accuracy: 50.00
+27-Sep-23 10:25:41 - INFO - Fold 2, Epoch 3, Training Loss: 0.4895, Validation Loss: 1.1587
+27-Sep-23 10:25:41 - INFO - Training Accuracy: 68.75, Validation Accuracy: 50.00
+27-Sep-23 10:27:27 - INFO - Fold 2, Epoch 4, Training Loss: 0.5370, Validation Loss: 0.4551
+27-Sep-23 10:27:27 - INFO - Training Accuracy: 81.25, Validation Accuracy: 83.33
+27-Sep-23 10:29:13 - INFO - Fold 2, Epoch 5, Training Loss: 0.4148, Validation Loss: 1.4329
+27-Sep-23 10:29:13 - INFO - Training Accuracy: 75.00, Validation Accuracy: 66.67
+27-Sep-23 10:30:56 - INFO - Fold 2, Epoch 6, Training Loss: 0.4332, Validation Loss: 0.9974
+27-Sep-23 10:30:56 - INFO - Training Accuracy: 75.00, Validation Accuracy: 50.00
+27-Sep-23 10:32:39 - INFO - Fold 2, Epoch 7, Training Loss: 0.5805, Validation Loss: 0.7133
+27-Sep-23 10:32:39 - INFO - Training Accuracy: 62.50, Validation Accuracy: 50.00
+27-Sep-23 10:34:24 - INFO - Fold 2, Epoch 8, Training Loss: 0.4799, Validation Loss: 0.7298
+27-Sep-23 10:34:24 - INFO - Training Accuracy: 75.00, Validation Accuracy: 50.00
+27-Sep-23 10:36:08 - INFO - Fold 2, Epoch 9, Training Loss: 0.4183, Validation Loss: 0.7208
+27-Sep-23 10:36:08 - INFO - Training Accuracy: 81.25, Validation Accuracy: 50.00
+27-Sep-23 10:37:53 - INFO - Fold 2, Epoch 10, Training Loss: 0.3962, Validation Loss: 0.7869
+27-Sep-23 10:37:53 - INFO - Training Accuracy: 75.00, Validation Accuracy: 50.00
+27-Sep-23 10:37:53 - INFO - Misclassified Patient IDs for Fold 2: [6, 22, 32]
+27-Sep-23 10:37:54 - INFO - Fold 3 Training Data:
+27-Sep-23 10:37:54 - INFO - Class Extensive: 11 samples
+27-Sep-23 10:37:54 - INFO - Class Microscopic: 6 samples
+27-Sep-23 10:37:54 - INFO - Fold 3 Validation Data:
+27-Sep-23 10:37:54 - INFO - Class Extensive: 4 samples
+27-Sep-23 10:37:54 - INFO - Class Microscopic: 1 samples
+27-Sep-23 10:39:36 - INFO - Fold 3, Epoch 1, Training Loss: 0.7338, Validation Loss: 0.0924
+27-Sep-23 10:39:36 - INFO - Training Accuracy: 58.82, Validation Accuracy: 100.00
+27-Sep-23 10:41:17 - INFO - Fold 3, Epoch 2, Training Loss: 0.5506, Validation Loss: 0.8038
+27-Sep-23 10:41:17 - INFO - Training Accuracy: 82.35, Validation Accuracy: 80.00
+27-Sep-23 10:42:59 - INFO - Fold 3, Epoch 3, Training Loss: 0.4870, Validation Loss: 0.3463
+27-Sep-23 10:42:59 - INFO - Training Accuracy: 76.47, Validation Accuracy: 100.00
+27-Sep-23 10:44:42 - INFO - Fold 3, Epoch 4, Training Loss: 0.6468, Validation Loss: 1.0644
+27-Sep-23 10:44:42 - INFO - Training Accuracy: 64.71, Validation Accuracy: 40.00
+27-Sep-23 10:46:23 - INFO - Fold 3, Epoch 5, Training Loss: 0.5857, Validation Loss: 0.2101
+27-Sep-23 10:46:23 - INFO - Training Accuracy: 76.47, Validation Accuracy: 100.00
+27-Sep-23 10:48:05 - INFO - Fold 3, Epoch 6, Training Loss: 0.5959, Validation Loss: 0.8759
+27-Sep-23 10:48:05 - INFO - Training Accuracy: 58.82, Validation Accuracy: 60.00
+27-Sep-23 10:49:46 - INFO - Fold 3, Epoch 7, Training Loss: 0.5034, Validation Loss: 1.4727
+27-Sep-23 10:49:46 - INFO - Training Accuracy: 82.35, Validation Accuracy: 20.00
+27-Sep-23 10:51:27 - INFO - Fold 3, Epoch 8, Training Loss: 0.4227, Validation Loss: 0.4594
+27-Sep-23 10:51:27 - INFO - Training Accuracy: 94.12, Validation Accuracy: 60.00
+27-Sep-23 10:53:09 - INFO - Fold 3, Epoch 9, Training Loss: 0.5817, Validation Loss: 0.2322
+27-Sep-23 10:53:09 - INFO - Training Accuracy: 76.47, Validation Accuracy: 100.00
+27-Sep-23 10:54:51 - INFO - Fold 3, Epoch 10, Training Loss: 0.5142, Validation Loss: 0.4578
+27-Sep-23 10:54:51 - INFO - Training Accuracy: 76.47, Validation Accuracy: 80.00
+27-Sep-23 10:54:51 - INFO - Misclassified Patient IDs for Fold 3: [27]
+27-Sep-23 10:54:52 - INFO - Fold 4 Training Data:
+27-Sep-23 10:54:52 - INFO - Class Extensive: 12 samples
+27-Sep-23 10:54:52 - INFO - Class Microscopic: 5 samples
+27-Sep-23 10:54:52 - INFO - Fold 4 Validation Data:
+27-Sep-23 10:54:52 - INFO - Class Extensive: 3 samples
+27-Sep-23 10:54:52 - INFO - Class Microscopic: 2 samples
+27-Sep-23 10:56:35 - INFO - Fold 4, Epoch 1, Training Loss: 0.6828, Validation Loss: 1.4229
+27-Sep-23 10:56:35 - INFO - Training Accuracy: 52.94, Validation Accuracy: 60.00
+27-Sep-23 10:58:19 - INFO - Fold 4, Epoch 2, Training Loss: 0.6877, Validation Loss: 0.6386
+27-Sep-23 10:58:19 - INFO - Training Accuracy: 58.82, Validation Accuracy: 60.00
+27-Sep-23 11:00:01 - INFO - Fold 4, Epoch 3, Training Loss: 0.6400, Validation Loss: 0.5986
+27-Sep-23 11:00:01 - INFO - Training Accuracy: 70.59, Validation Accuracy: 60.00
+27-Sep-23 11:01:45 - INFO - Fold 4, Epoch 4, Training Loss: 0.6082, Validation Loss: 0.6442
+27-Sep-23 11:01:45 - INFO - Training Accuracy: 70.59, Validation Accuracy: 60.00
+27-Sep-23 11:03:29 - INFO - Fold 4, Epoch 5, Training Loss: 0.6597, Validation Loss: 0.6328
+27-Sep-23 11:03:29 - INFO - Training Accuracy: 76.47, Validation Accuracy: 60.00
+27-Sep-23 11:05:13 - INFO - Fold 4, Epoch 6, Training Loss: 0.5061, Validation Loss: 0.6246
+27-Sep-23 11:05:13 - INFO - Training Accuracy: 70.59, Validation Accuracy: 60.00
+27-Sep-23 11:06:54 - INFO - Fold 4, Epoch 7, Training Loss: 0.4691, Validation Loss: 0.5412
+27-Sep-23 11:06:54 - INFO - Training Accuracy: 82.35, Validation Accuracy: 60.00
+27-Sep-23 11:08:37 - INFO - Fold 4, Epoch 8, Training Loss: 0.4791, Validation Loss: 0.5471
+27-Sep-23 11:08:37 - INFO - Training Accuracy: 82.35, Validation Accuracy: 60.00
+27-Sep-23 11:10:20 - INFO - Fold 4, Epoch 9, Training Loss: 0.3021, Validation Loss: 0.4357
+27-Sep-23 11:10:20 - INFO - Training Accuracy: 94.12, Validation Accuracy: 80.00
+27-Sep-23 11:12:03 - INFO - Fold 4, Epoch 10, Training Loss: 0.2970, Validation Loss: 0.6455
+27-Sep-23 11:12:03 - INFO - Training Accuracy: 88.24, Validation Accuracy: 60.00
+27-Sep-23 11:12:03 - INFO - Misclassified Patient IDs for Fold 4: [20, 28]
+27-Sep-23 11:12:04 - INFO - Finished Training
